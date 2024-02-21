@@ -16,7 +16,6 @@ use sql_builder::{esc, quote, SqlBuilder, SqlName};
 use sqlx::{
     sqlite::{
         SqliteConnectOptions, SqliteJournalMode, SqlitePool, SqlitePoolOptions, SqliteRow,
-        SqliteSynchronous,
     },
     Result, Row,
 };
@@ -139,9 +138,9 @@ impl Sqlite {
         }
 
         let opts = SqliteConnectOptions::from_str(path.as_os_str().to_str().unwrap())?
-            .journal_mode(SqliteJournalMode::Wal)
+            .journal_mode(SqliteJournalMode::Memory)
             .optimize_on_close(true, None)
-            .synchronous(SqliteSynchronous::Normal)
+            .synchronous(sqlx::sqlite::SqliteSynchronous::Off)
             .create_if_missing(true);
 
         let pool = SqlitePoolOptions::new()
